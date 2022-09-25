@@ -163,6 +163,10 @@ impl Connection {
             conn.await?
         };
 
+        let max_stream_count = quinn::VarInt::from_u32(65535);
+        connection.set_max_concurrent_bi_streams(max_stream_count);
+        connection.set_max_concurrent_uni_streams(max_stream_count);
+
         let conn = Self::new(connection, config).await;
         let uni_streams = IncomingUniStreams::new(uni_streams, conn.stream_reg.get_registry());
 
